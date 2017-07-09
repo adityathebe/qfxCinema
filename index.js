@@ -7,22 +7,29 @@ const app = express();
 app.get('/', (req, res) => {
     const url = 'http://www.qfxcinemas.com/';
     let movies = [];
+    let onCinema = [];
     let upcomingMovies = [];
+    let moviesPayload = [];
 
     request(url, (error, response, body) => {
         if(!error) {
             /*=============== CHEERIO ================*/
             let $ = cheerio.load(body);
-            $(".movie").each(function(i, elem) {
-                let movie = $(this).find('h4').text()
-                let image = $(this).find('.img-b').attr("src")
-                image = url + image;
-                movies.push({title: movie, image});
+            $('.movie').each(function(i, elem) {
+                let title = $(this).find('h4').text();
+                let type  = $(this).find('.movie-type').text();
+                let image = url + $(this).find('.img-b').attr("src");
+                let book  = $(this).find('.ticket').attr("href");
+                if(book)
+                    book = url + book;
+                let date  = $(this).find('.movie-date').text().replace('\n','').trim();
+                movies.push( {title, image, type, book, date} );
             });
-            upcomingMovies = movies.slice(6)
-            movies = movies.slice(0, 6);
+            onCinema = movies.slice(0, 6);
+            upcomingMovies = movies.slice(6);
+            
             let data = {
-                movies,
+                onCinema,
                 upcomingMovies
             }
             res.send(data);
