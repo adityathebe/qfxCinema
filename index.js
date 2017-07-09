@@ -5,7 +5,7 @@ const express = require('express');
 const app = express();
 
 app.get('/', (req, res) => {
-    const url = 'http://www.qfxcinemas.com/';
+    const url = 'http://www.qfxcinemas.com';
     let movies = [];
     let onCinema = [];
     let upcomingMovies = [];
